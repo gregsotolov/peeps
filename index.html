@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Peeps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the app */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* A soft, neutral background */
+        }
+
+        /* --- Simplified Family Tree Styles --- */
+        .family-tree-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem; /* Spacing between generations */
+        }
+        .tree-level:last-child {
+            margin-bottom: 0;
+        }
+        
+        .node-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 0 1.5rem; /* Spacing between grandparent branches */
+        }
+
+        .couple {
+            display: flex;
+            position: relative;
+        }
+
+        .node {
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin: 0 0.5rem;
+            text-align: center;
+            min-width: 120px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .node img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            object-cover: cover;
+        }
+        .node-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .node-connection {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* --- Image Modal Styles --- */
+        #imageModal {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+        #modalImage {
+            transition: transform 0.2s ease-in-out;
+            cursor: grab;
+        }
+        #modalImage.grabbing {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-700">
+
+    <!-- Password Protection Screen -->
+    <div id="password-screen" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm p-8 rounded-2xl shadow-2xl text-center">
+            <svg class="mx-auto h-12 w-12 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            <h1 class="text-2xl font-bold mt-4 text-gray-800">Private Album</h1>
+            <p class="text-gray-600 mt-2">Please enter the password to view.</p>
+            <form id="password-form" class="mt-6">
+                <input type="password" id="password-input" class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Password">
+                <p id="error-message" class="text-red-500 text-sm mt-2 h-5"></p>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg mt-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                    Unlock
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content Area (hidden by default) -->
+    <main id="main-content" class="hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <!-- Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-5xl font-extrabold text-slate-800 tracking-tight">My People</h1>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">A collection of photos of the people who matter most.</p>
+            </header>
+
+            <!-- Controls: View Switcher and Sorting -->
+            <div class="flex flex-col items-center justify-center gap-4 mb-8">
+                <!-- View Switcher -->
+                <div class="flex items-center p-1 bg-slate-200 rounded-lg">
+                    <button id="grid-view-btn" class="px-4 py-2 text-sm font-semibold rounded-md transition focus:outline-none">Grid View</button>
+                    <button id="tree-view-btn" class="px-4 py-2 text-sm font-semibold rounded-md transition focus:outline-none">Family Tree</button>
+                </div>
+
+                <!-- Search and Sort Container -->
+                <div id="filter-sort-container" class="w-full max-w-xs sm:max-w-sm md:max-w-md flex flex-col sm:flex-row gap-4">
+                    <!-- Search Bar -->
+                     <div id="search-container" class="flex-grow">
+                        <input type="text" id="search-bar" placeholder="Search by name..." class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+
+                    <!-- Sorting Controls (only for grid view) -->
+                    <div id="sort-controls" class="flex-shrink-0">
+                        <select id="sort-dropdown" class="w-full sm:w-auto px-4 py-2 text-sm font-semibold rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                            <option value="everyone">Filter & Sort</option>
+                            <option value="family">Family Only</option>
+                            <option value="friends">Friends Only</option>
+                            <option value="coworkers">Coworkers Only</option>
+                            <option value="aunts-uncles">Aunts & Uncles Only</option>
+                            <option value="az">Sort Alphabetical (A-Z)</option>
+                            <option value="za">Sort Alphabetical (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Display Area -->
+            <div id="content-area">
+                <!-- People cards or family tree will be injected here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4">
+        <div class="absolute inset-0" id="closeModalBg"></div>
+        <div class="relative bg-white p-4 rounded-xl shadow-2xl max-w-2xl max-h-[90vh] w-full flex flex-col">
+            <div class="flex-shrink-0 flex items-center justify-between mb-4">
+                 <!-- Zoom Controls -->
+                 <div class="flex items-center gap-2">
+                    <button id="zoomInBtn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                    </button>
+                    <button id="zoomOutBtn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg>
+                    </button>
+                </div>
+                <button id="closeModalBtn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <!-- Scrollable container for modal content -->
+            <div class="flex-grow overflow-y-auto pr-2">
+                <div class="flex items-center justify-center">
+                     <img id="modalImage" src="" alt="Enlarged view" class="max-w-full max-h-[40vh] object-contain rounded-lg">
+                </div>
+                <!-- Person Info Section -->
+                <div id="personInfoContainer" class="pt-4 mt-4 border-t border-gray-200">
+                    <!-- Name and Description will be injected here -->
+                </div>
+                <!-- Related People Section -->
+                <div id="relatedPeopleContainer" class="pt-4 mt-4 border-t border-gray-200">
+                    <!-- Related people will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- DATA ---
+            const peopleData = [
+                // Paternal Grandparents
+                { id: 1, name: 'Louis Sotolov', connection: 'Paternal Grandfather', imageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Louis', description: 'A kind and hardworking man who always had a story to tell.' },
+                { id: 2, name: 'Riva Sotolov', connection: 'Paternal Grandmother', imageUrl: 'https://placehold.co/400x400/f1faee/1d3557?text=Riva', description: 'Known for her incredible cooking and warm hugs.' },
+                // Maternal Grandparents
+                { id: 3, name: 'Ted Ehret', connection: 'Maternal Grandfather', imageUrl: 'https://placehold.co/400x400/e63946/f1faee?text=Ted', description: 'A lover of the outdoors and a master fisherman.' },
+                { id: 4, name: 'Barbara Ehret', connection: 'Maternal Grandmother', imageUrl: 'https://placehold.co/400x400/1d3557/f1faee?text=Barbara', description: 'An avid reader and gardener with a contagious laugh.' },
+                // Parents
+                { id: 5, name: 'Gerald Sotolov', connection: 'Father', imageUrl: 'https://placehold.co/400x400/457b9d/f1faee?text=Gerald', description: 'My biggest supporter and the person I look up to most.' },
+                { id: 6, name: 'Corinne "Cory" Sotolov', connection: 'Mother', imageUrl: 'https://placehold.co/400x400/a8dadc/457b9d?text=Cory', description: 'The heart of the family, always full of love and wisdom.' },
+                // Children
+                { id: 7, name: 'Greg Sotolov', connection: 'Me!', imageUrl: 'https://placehold.co/400x400/f1faee/e63946?text=Me', description: 'This is me!' },
+                { id: 8, name: 'Robert Sotolov', connection: 'Brother', imageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Robert', description: 'My partner in crime since day one.' },
+                // Friends
+                { id: 9, name: 'Daniel Evans', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Daniel', description: 'A loyal friend through thick and thin.' },
+                { id: 10, name: 'Stephen Trinh', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Stephen', description: 'Always up for an adventure and a good laugh.' },
+                { id: 11, name: 'Jonathan Hawkins', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Jonathan', description: 'The most creative and talented person I know.' },
+                { id: 12, name: 'Andrew Prahlow', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Andrew', description: 'A brilliant composer and an even better friend.' },
+                { id: 13, name: 'Grant Goodwin', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Grant', description: 'Always brings positive energy wherever he goes.' },
+                { id: 14, name: 'Casey Margolis', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Casey', description: 'Full of witty jokes and great advice.' },
+                { id: 15, name: 'Sam Sharit', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Sam', description: 'A true confidant and a kind soul.' },
+                { id: 16, name: 'Ron Nofar', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Ron', description: 'The life of the party and a friend to everyone.' },
+                // Coworkers
+                { id: 17, name: 'Steve Burke', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/588157/a3b18a?text=Steve', description: 'A great mentor and a pleasure to work with.' },
+                { id: 18, name: 'Evan Hembacher', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/3a5a40/a3b18a?text=Evan', description: 'A sharp mind and a great problem-solver.' },
+                { id: 19, name: 'Matt Gonzalez', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/344e41/a3b18a?text=Matt', description: 'Always helpful and a key part of the team.' },
+                { id: 20, name: 'Chase Sommer', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/2a3d45/a3b18a?text=Chase', description: 'Brings creativity and dedication to every project.' },
+                // Aunts & Uncles
+                { id: 21, name: 'Scott Meyers', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Scott', description: 'An uncle with a great sense of humor.' },
+                { id: 22, name: 'George Meyers', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=George', description: 'Always ready with a fascinating story.' },
+                { id: 23, name: 'Harvey Sotolov', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Harvey', description: 'Taught me the importance of family tradition.' },
+                { id: 24, name: 'Fran Meyers', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Fran', description: 'The best aunt for advice and support.' },
+                { id: 25, name: 'Tracy Henderson', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Tracy', description: 'Her generosity and kindness are inspiring.' },
+                { id: 26, name: 'Beverly Sotolov', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Beverly', description: 'Always makes every family gathering special.' },
+            ];
+
+            // --- PASSWORD PROTECTION ---
+            const passwordForm = document.getElementById('password-form');
+            const passwordInput = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            const passwordScreen = document.getElementById('password-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            const correctValue = 'cGVlcHM=';
+
+            passwordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                errorMessage.textContent = '';
+                const enteredPassword = passwordInput.value;
+
+                try {
+                    if (btoa(enteredPassword) === correctValue) {
+                        passwordScreen.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                        setTimeout(() => {
+                            passwordScreen.classList.add('hidden');
+                            mainContent.classList.remove('hidden');
+                        }, 500);
+                    } else {
+                        errorMessage.textContent = 'Incorrect password. Please try again.';
+                        passwordInput.value = '';
+                    }
+                } catch (error) {
+                    console.error("Error during password check:", error);
+                    errorMessage.textContent = 'An error occurred. Please try again.';
+                }
+            });
+
+            // --- APP LOGIC ---
+            const contentArea = document.getElementById('content-area');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const treeViewBtn = document.getElementById('tree-view-btn');
+            const filterSortContainer = document.getElementById('filter-sort-container');
+            const searchBar = document.getElementById('search-bar');
+            const sortDropdown = document.getElementById('sort-dropdown');
+            
+            let currentView = 'grid';
+            let currentSort = 'everyone';
+            let currentSearchQuery = '';
+            
+            // --- VIEW RENDERING ---
+
+            function renderGridView() {
+                // 1. Filter by search query
+                let dataToRender = peopleData.filter(person =>
+                    person.name.toLowerCase().includes(currentSearchQuery)
+                );
+
+                // 2. Apply category filter if selected
+                if (currentSort === 'family') {
+                    dataToRender = dataToRender.filter(person => person.connection !== 'Friend' && person.connection !== 'Coworker');
+                } else if (currentSort === 'friends') {
+                    dataToRender = dataToRender.filter(person => person.connection === 'Friend');
+                } else if (currentSort === 'coworkers') {
+                    dataToRender = dataToRender.filter(person => person.connection === 'Coworker');
+                } else if (currentSort === 'aunts-uncles') {
+                    dataToRender = dataToRender.filter(person => person.connection === 'Aunt' || person.connection === 'Uncle');
+                }
+
+
+                // 3. Apply alphabetical sort if selected
+                if (currentSort === 'az') {
+                    dataToRender.sort((a, b) => a.name.localeCompare(b.name));
+                } else if (currentSort === 'za') {
+                    dataToRender.sort((a, b) => b.name.localeCompare(a.name));
+                }
+
+                // 4. Render the results
+                contentArea.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        ${dataToRender.map(person => `
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                                <img src="${person.imageUrl}" alt="${person.name}" class="w-full h-64 object-cover cursor-pointer person-image" data-id="${person.id}">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-slate-800">${person.name}</h3>
+                                    <p class="text-slate-500 mt-1">${person.connection}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                addGridImageListeners();
+            }
+            
+            function renderPersonNode(person) {
+                if (!person) return '';
+                return `
+                    <div class="node person-image" data-id="${person.id}">
+                        <img src="${person.imageUrl}" alt="${person.name}">
+                        <div class="node-name">${person.name}</div>
+                        <div class="node-connection">${person.connection}</div>
+                    </div>
+                `;
+            }
+
+            function renderTreeView() {
+                const findPerson = (name) => peopleData.find(p => p.name === name);
+
+                const html = `
+                    <div class="family-tree-container">
+                        <!-- Grandparents Generation -->
+                        <div class="tree-level" id="grandparents-level">
+                            <div class="node-group">
+                                <div class="couple">
+                                    ${renderPersonNode(findPerson('Louis Sotolov'))}
+                                    ${renderPersonNode(findPerson('Riva Sotolov'))}
+                                </div>
+                            </div>
+                             <div class="node-group">
+                                <div class="couple">
+                                    ${renderPersonNode(findPerson('Ted Ehret'))}
+                                    ${renderPersonNode(findPerson('Barbara Ehret'))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parents Generation -->
+                        <div class="tree-level" id="parents-level">
+                            <div class="node-group">
+                                <div class="couple">
+                                    ${renderPersonNode(findPerson('Gerald Sotolov'))}
+                                    ${renderPersonNode(findPerson('Corinne "Cory" Sotolov'))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Children Generation -->
+                        <div class="tree-level" id="children-level">
+                             <div class="node-group">
+                                <div class="couple">
+                                    ${renderPersonNode(findPerson('Greg Sotolov'))}
+                                    ${renderPersonNode(findPerson('Robert Sotolov'))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contentArea.innerHTML = html;
+                addGridImageListeners();
+            }
+
+            function updateUI() {
+                if (currentView === 'grid') {
+                    filterSortContainer.style.display = 'flex';
+                    renderGridView();
+                    gridViewBtn.classList.add('bg-white', 'text-blue-600', 'shadow-md');
+                    treeViewBtn.classList.remove('bg-white', 'text-blue-600', 'shadow-md');
+                } else {
+                    filterSortContainer.style.display = 'none';
+                    renderTreeView();
+                    treeViewBtn.classList.add('bg-white', 'text-blue-600', 'shadow-md');
+                    gridViewBtn.classList.remove('bg-white', 'text-blue-600', 'shadow-md');
+                }
+            }
+
+            // --- EVENT LISTENERS ---
+            gridViewBtn.addEventListener('click', () => { currentView = 'grid'; updateUI(); });
+            treeViewBtn.addEventListener('click', () => { currentView = 'tree'; updateUI(); });
+            
+            searchBar.addEventListener('input', () => {
+                currentSearchQuery = searchBar.value.toLowerCase();
+                updateUI();
+            });
+
+            sortDropdown.addEventListener('change', () => {
+                currentSort = sortDropdown.value;
+                updateUI();
+            });
+
+            // Logic to change dropdown text on interaction
+            const firstOption = sortDropdown.querySelector('option[value="everyone"]');
+            if (firstOption) {
+                sortDropdown.addEventListener('mousedown', () => {
+                    firstOption.textContent = 'Everyone';
+                });
+                sortDropdown.addEventListener('blur', () => {
+                    if (sortDropdown.value === 'everyone') {
+                        firstOption.textContent = 'Filter & Sort';
+                    }
+                });
+            }
+            
+            function addGridImageListeners() {
+                document.querySelectorAll('.person-image').forEach(img => {
+                    img.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const personId = parseInt(e.currentTarget.dataset.id, 10);
+                        openModal(personId);
+                    });
+                });
+            }
+
+            // --- IMAGE MODAL LOGIC ---
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const closeModalBg = document.getElementById('closeModalBg');
+            const zoomInBtn = document.getElementById('zoomInBtn');
+            const zoomOutBtn = document.getElementById('zoomOutBtn');
+            const personInfoContainer = document.getElementById('personInfoContainer');
+            const relatedPeopleContainer = document.getElementById('relatedPeopleContainer');
+
+            let scale = 1, isPanning = false, start = { x: 0, y: 0 }, translate = { x: 0, y: 0 };
+            
+            function getRelatedPeople(personId) {
+                const person = peopleData.find(p => p.id === personId);
+                if (!person) return [];
+
+                const relations = {
+                    1: { spouse: 2, children: [5, 23, 26] }, // Louis
+                    2: { spouse: 1, children: [5, 23, 26] }, // Riva
+                    3: { spouse: 4, children: [6, 21, 22, 24, 25] }, // Ted
+                    4: { spouse: 3, children: [6, 21, 22, 24, 25] }, // Barbara
+                    5: { spouse: 6, parents: [1, 2], children: [7, 8], siblings: [23, 26] }, // Gerald
+                    6: { spouse: 5, parents: [3, 4], children: [7, 8], siblings: [21, 22, 24, 25] }, // Corinne
+                    7: { parents: [5, 6], sibling: 8, auntsUncles: [21, 22, 23, 24, 25, 26] }, // Greg
+                    8: { parents: [5, 6], sibling: 7, auntsUncles: [21, 22, 23, 24, 25, 26] }, // Robert
+                    // Aunts & Uncles
+                    21: { parents: [3, 4], siblings: [6, 22, 24, 25], niblings: [7, 8] }, // Scott
+                    22: { parents: [3, 4], siblings: [6, 21, 24, 25], niblings: [7, 8] }, // George
+                    23: { parents: [1, 2], siblings: [5, 26], niblings: [7, 8] }, // Harvey
+                    24: { parents: [3, 4], siblings: [6, 21, 22, 25], niblings: [7, 8] }, // Fran
+                    25: { parents: [3, 4], siblings: [6, 21, 22, 24], niblings: [7, 8] }, // Tracy
+                    26: { parents: [1, 2], siblings: [5, 23], niblings: [7, 8] }  // Beverly
+                };
+
+                const relatedIds = [];
+                const personRelations = relations[personId];
+                
+                if (personRelations) {
+                    if (personRelations.spouse) relatedIds.push(personRelations.spouse);
+                    if (personRelations.sibling) relatedIds.push(personRelations.sibling);
+                    if (personRelations.siblings) relatedIds.push(...personRelations.siblings);
+                    if (personRelations.parents) relatedIds.push(...personRelations.parents);
+                    if (personRelations.children) relatedIds.push(...personRelations.children);
+                    if (personRelations.auntsUncles) relatedIds.push(...personRelations.auntsUncles);
+                    if (personRelations.niblings) relatedIds.push(...personRelations.niblings);
+                }
+                
+                return relatedIds
+                    .map(id => peopleData.find(p => p.id === id))
+                    .filter(Boolean);
+            }
+
+            function openModal(personId) {
+                const person = peopleData.find(p => p.id === personId);
+                if (!person) return;
+
+                modalImage.src = person.imageUrl;
+                modalImage.alt = `Enlarged view of ${person.name}`;
+                
+                // Populate person info
+                personInfoContainer.innerHTML = `
+                    <h2 class="text-2xl font-bold text-center text-slate-800">${person.name}</h2>
+                    <p class="mt-2 text-slate-600 text-center">${person.description}</p>
+                `;
+                
+                // Populate related people
+                relatedPeopleContainer.innerHTML = '';
+                const related = getRelatedPeople(personId);
+                
+                if (related.length > 0) {
+                    let relatedHtml = '<h3 class="text-sm font-semibold text-slate-600 mb-2 text-center">Related People</h3><div class="flex flex-wrap gap-2 justify-center">';
+                    related.forEach(relatedPerson => {
+                        relatedHtml += `
+                            <button class="related-person-btn flex items-center gap-2 bg-slate-100 hover:bg-slate-200 transition px-3 py-1 rounded-full text-sm" data-id="${relatedPerson.id}">
+                                <img src="${relatedPerson.imageUrl}" class="w-6 h-6 rounded-full object-cover">
+                                <span>${relatedPerson.name}</span>
+                            </button>
+                        `;
+                    });
+                    relatedHtml += '</div>';
+                    relatedPeopleContainer.innerHTML = relatedHtml;
+
+                    document.querySelectorAll('.related-person-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const newPersonId = parseInt(e.currentTarget.dataset.id, 10);
+                            openModal(newPersonId);
+                        });
+                    });
+                }
+                
+                resetZoomAndPan();
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                modalImage.src = '';
+            }
+            
+            function applyTransform() {
+                modalImage.style.transform = `translate(${translate.x}px, ${translate.y}px) scale(${scale})`;
+            }
+            
+            function resetZoomAndPan() {
+                scale = 1; translate = { x: 0, y: 0 }; applyTransform();
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            closeModalBg.addEventListener('click', closeModal);
+            zoomInBtn.addEventListener('click', () => { scale = Math.min(3, scale * 1.2); applyTransform(); });
+            zoomOutBtn.addEventListener('click', () => { scale = Math.max(0.5, scale / 1.2); if (scale <= 1) resetZoomAndPan(); else applyTransform(); });
+            
+            modalImage.addEventListener('mousedown', (e) => {
+                e.preventDefault(); isPanning = true; start = { x: e.clientX - translate.x, y: e.clientY - translate.y }; modalImage.classList.add('grabbing');
+            });
+            modalImage.addEventListener('mousemove', (e) => {
+                if (!isPanning) return; e.preventDefault(); translate.x = e.clientX - start.x; translate.y = e.clientY - start.y; applyTransform();
+            });
+            modalImage.addEventListener('mouseup', () => { isPanning = false; modalImage.classList.remove('grabbing'); });
+            modalImage.addEventListener('mouseleave', () => { isPanning = false; modalImage.classList.remove('grabbing'); });
+
+            // --- INITIAL LOAD ---
+            updateUI();
+        });
+    </script>
+</body>
+</html>
+
