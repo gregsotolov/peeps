@@ -196,48 +196,48 @@
             // --- DATA ---
             const peopleData = [
                 // Paternal Grandparents
-                { id: 1, name: 'Louis Sotolov', connection: 'Paternal Grandfather', imageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Louis', description: 'A kind and hardworking man who always had a story to tell.' },
-                { id: 2, name: 'Riva Sotolov', connection: 'Paternal Grandmother', imageUrl: 'https://placehold.co/400x400/f1faee/1d3557?text=Riva', description: 'Known for her incredible cooking and warm hugs.' },
+                { id: 1, name: 'Louis Sotolov', connection: 'Paternal Grandfather', localImageUrl: 'images/louis_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Louis', description: 'A kind and hardworking man who always had a story to tell.' },
+                { id: 2, name: 'Riva Sotolov', connection: 'Paternal Grandmother', localImageUrl: 'images/riva_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f1faee/1d3557?text=Riva', description: 'Known for her incredible cooking and warm hugs.' },
                 // Maternal Grandparents
-                { id: 3, name: 'Ted Ehret', connection: 'Maternal Grandfather', imageUrl: 'https://placehold.co/400x400/e63946/f1faee?text=Ted', description: 'A lover of the outdoors and a master fisherman.' },
-                { id: 4, name: 'Barbara Ehret', connection: 'Maternal Grandmother', imageUrl: 'https://placehold.co/400x400/1d3557/f1faee?text=Barbara', description: 'An avid reader and gardener with a contagious laugh.' },
+                { id: 3, name: 'Ted Ehret', connection: 'Maternal Grandfather', localImageUrl: 'images/ted_ehret/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/e63946/f1faee?text=Ted', description: 'A lover of the outdoors and a master fisherman.' },
+                { id: 4, name: 'Barbara Ehret', connection: 'Maternal Grandmother', localImageUrl: 'images/barbara_ehret/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/1d3557/f1faee?text=Barbara', description: 'An avid reader and gardener with a contagious laugh.' },
                 // Parents
-                { id: 5, name: 'Gerald Sotolov', connection: 'Father', imageUrl: 'https://placehold.co/400x400/457b9d/f1faee?text=Gerald', description: 'My biggest supporter and the person I look up to most.' },
-                { id: 6, name: 'Corinne "Cory" Sotolov', connection: 'Mother', imageUrl: 'https://placehold.co/400x400/a8dadc/457b9d?text=Cory', description: 'The heart of the family, always full of love and wisdom.' },
+                { id: 5, name: 'Gerald Sotolov', connection: 'Father', localImageUrl: 'images/gerald_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/457b9d/f1faee?text=Gerald', description: 'My biggest supporter and the person I look up to most.' },
+                { id: 6, name: 'Corinne "Cory" Sotolov', connection: 'Mother', localImageUrl: 'images/corinne_cory_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/a8dadc/457b9d?text=Cory', description: 'The heart of the family, always full of love and wisdom.' },
                 // Children
-                { id: 7, name: 'Greg Sotolov', connection: 'Me!', imageUrl: 'https://placehold.co/400x400/f1faee/e63946?text=Me', description: 'This is me!' },
-                { id: 8, name: 'Robert Sotolov', connection: 'Brother', imageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Robert', description: 'My partner in crime since day one.' },
+                { id: 7, name: 'Greg Sotolov', connection: 'Me!', localImageUrl: 'images/greg_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f1faee/e63946?text=Me', description: 'This is me!' },
+                { id: 8, name: 'Robert Sotolov', connection: 'Brother', localImageUrl: 'images/robert_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/a8dadc/1d3557?text=Robert', description: 'My partner in crime since day one.' },
                 // Friends
-                { id: 9, name: 'Daniel Evans', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Daniel', description: 'A loyal friend through thick and thin.' },
-                { id: 10, name: 'Stephen Trinh', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Stephen', description: 'Always up for an adventure and a good laugh.' },
-                { id: 11, name: 'Jonathan Hawkins', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Jonathan', description: 'The most creative and talented person I know.' },
-                { id: 12, name: 'Andrew Prahlow', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Andrew', description: 'A brilliant composer and an even better friend.' },
-                { id: 13, name: 'Grant Goodwin', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Grant', description: 'Always brings positive energy wherever he goes.' },
-                { id: 14, name: 'Casey Margolis', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Casey', description: 'Full of witty jokes and great advice.' },
-                { id: 15, name: 'Sam Sharit', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Sam', description: 'A true confidant and a kind soul.' },
-                { id: 16, name: 'Ron Nofar', connection: 'Friend', imageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Ron', description: 'The life of the party and a friend to everyone.' },
+                { id: 9, name: 'Daniel Evans', connection: 'Friend', localImageUrl: 'images/daniel_evans/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Daniel', description: 'A loyal friend through thick and thin.' },
+                { id: 10, name: 'Stephen Trinh', connection: 'Friend', localImageUrl: 'images/stephen_trinh/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Stephen', description: 'Always up for an adventure and a good laugh.' },
+                { id: 11, name: 'Jonathan Hawkins', connection: 'Friend', localImageUrl: 'images/jonathan_hawkins/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Jonathan', description: 'The most creative and talented person I know.' },
+                { id: 12, name: 'Andrew Prahlow', connection: 'Friend', localImageUrl: 'images/andrew_prahlow/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Andrew', description: 'A brilliant composer and an even better friend.' },
+                { id: 13, name: 'Grant Goodwin', connection: 'Friend', localImageUrl: 'images/grant_goodwin/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/ffb703/023047?text=Grant', description: 'Always brings positive energy wherever he goes.' },
+                { id: 14, name: 'Casey Margolis', connection: 'Friend', localImageUrl: 'images/casey_margolis/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/fb8500/023047?text=Casey', description: 'Full of witty jokes and great advice.' },
+                { id: 15, name: 'Sam Sharit', connection: 'Friend', localImageUrl: 'images/sam_sharit/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/219ebc/023047?text=Sam', description: 'A true confidant and a kind soul.' },
+                { id: 16, name: 'Ron Nofar', connection: 'Friend', localImageUrl: 'images/ron_nofar/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/8ecae6/023047?text=Ron', description: 'The life of the party and a friend to everyone.' },
                 // Coworkers
-                { id: 17, name: 'Steve Burke', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/588157/a3b18a?text=Steve', description: 'A great mentor and a pleasure to work with.' },
-                { id: 18, name: 'Evan Hembacher', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/3a5a40/a3b18a?text=Evan', description: 'A sharp mind and a great problem-solver.' },
-                { id: 19, name: 'Matt Gonzalez', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/344e41/a3b18a?text=Matt', description: 'Always helpful and a key part of the team.' },
-                { id: 20, name: 'Chase Sommer', connection: 'Coworker', imageUrl: 'https://placehold.co/400x400/2a3d45/a3b18a?text=Chase', description: 'Brings creativity and dedication to every project.' },
+                { id: 17, name: 'Steve Burke', connection: 'Coworker', localImageUrl: 'images/steve_burke/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/588157/a3b18a?text=Steve', description: 'A great mentor and a pleasure to work with.' },
+                { id: 18, name: 'Evan Hembacher', connection: 'Coworker', localImageUrl: 'images/evan_hembacher/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/3a5a40/a3b18a?text=Evan', description: 'A sharp mind and a great problem-solver.' },
+                { id: 19, name: 'Matt Gonzalez', connection: 'Coworker', localImageUrl: 'images/matt_gonzalez/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/344e41/a3b18a?text=Matt', description: 'Always helpful and a key part of the team.' },
+                { id: 20, name: 'Chase Sommer', connection: 'Coworker', localImageUrl: 'images/chase_sommer/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/2a3d45/a3b18a?text=Chase', description: 'Brings creativity and dedication to every project.' },
                 // Aunts & Uncles
-                { id: 21, name: 'Scott Meyers', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Scott', description: 'An uncle with a great sense of humor.' },
-                { id: 22, name: 'George Meyers', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=George', description: 'Always ready with a fascinating story.' },
-                { id: 23, name: 'Harvey Sotolov', connection: 'Uncle', imageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Harvey', description: 'Taught me the importance of family tradition.' },
-                { id: 24, name: 'Fran Meyers', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Fran', description: 'The best aunt for advice and support.' },
-                { id: 25, name: 'Tracy Henderson', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Tracy', description: 'Her generosity and kindness are inspiring.' },
-                { id: 26, name: 'Beverly Sotolov', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Beverly', description: 'Always makes every family gathering special.' },
+                { id: 21, name: 'Scott Meyers', connection: 'Uncle', localImageUrl: 'images/scott_meyers/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Scott', description: 'An uncle with a great sense of humor.' },
+                { id: 22, name: 'George Meyers', connection: 'Uncle', localImageUrl: 'images/george_meyers/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=George', description: 'Always ready with a fascinating story.' },
+                { id: 23, name: 'Harvey Sotolov', connection: 'Uncle', localImageUrl: 'images/harvey_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/d4a373/fefae0?text=Harvey', description: 'Taught me the importance of family tradition.' },
+                { id: 24, name: 'Fran Meyers', connection: 'Aunt', localImageUrl: 'images/fran_meyers/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Fran', description: 'The best aunt for advice and support.' },
+                { id: 25, name: 'Tracy Henderson', connection: 'Aunt', localImageUrl: 'images/tracy_henderson/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Tracy', description: 'Her generosity and kindness are inspiring.' },
+                { id: 26, name: 'Beverly Sotolov', connection: 'Aunt', localImageUrl: 'images/beverly_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Beverly', description: 'Always makes every family gathering special.' },
                 // Cousins
-                { id: 27, name: 'Rachel Kappen', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Rachel', description: 'A cousin who feels more like a sister.' },
-                { id: 28, name: 'Kevin Kappen', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kevin', description: 'Always knows how to make everyone laugh.' },
-                { id: 29, name: 'Jaime Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jaime', description: 'Incredibly smart and driven.' },
-                { id: 30, name: 'Kadi Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kadi', description: 'The most adventurous person in the family.' },
-                { id: 31, name: 'Nick Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Nick', description: 'A talented musician and a great person to talk to.' },
-                { id: 32, name: 'Joey Meyers', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Joey', description: 'Shares my love for movies and games.' },
-                { id: 33, name: 'Jessica Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jessica', description: 'Wise beyond her years.' },
-                { id: 34, name: 'Robin Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Robin', description: 'Has a passion for art and creativity.' },
-                { id: 35, name: 'David Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=David', description: 'The family comedian.' },
+                { id: 27, name: 'Rachel Kappen', connection: 'Cousin', localImageUrl: 'images/rachel_kappen/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Rachel', description: 'A cousin who feels more like a sister.' },
+                { id: 28, name: 'Kevin Kappen', connection: 'Cousin', localImageUrl: 'images/kevin_kappen/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kevin', description: 'Always knows how to make everyone laugh.' },
+                { id: 29, name: 'Jaime Henderson', connection: 'Cousin', localImageUrl: 'images/jaime_henderson/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jaime', description: 'Incredibly smart and driven.' },
+                { id: 30, name: 'Kadi Henderson', connection: 'Cousin', localImageUrl: 'images/kadi_henderson/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kadi', description: 'The most adventurous person in the family.' },
+                { id: 31, name: 'Nick Henderson', connection: 'Cousin', localImageUrl: 'images/nick_henderson/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Nick', description: 'A talented musician and a great person to talk to.' },
+                { id: 32, name: 'Joey Meyers', connection: 'Cousin', localImageUrl: 'images/joey_meyers/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Joey', description: 'Shares my love for movies and games.' },
+                { id: 33, name: 'Jessica Sotolov', connection: 'Cousin', localImageUrl: 'images/jessica_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jessica', description: 'Wise beyond her years.' },
+                { id: 34, name: 'Robin Sotolov', connection: 'Cousin', localImageUrl: 'images/robin_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Robin', description: 'Has a passion for art and creativity.' },
+                { id: 35, name: 'David Sotolov', connection: 'Cousin', localImageUrl: 'images/david_sotolov/1.jpg', fallbackImageUrl: 'https://placehold.co/400x400/f4a261/264653?text=David', description: 'The family comedian.' },
             ];
 
             // --- PASSWORD PROTECTION ---
@@ -316,7 +316,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                         ${dataToRender.map(person => `
                             <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
-                                <img src="${person.imageUrl}" alt="${person.name}" class="w-full h-64 object-cover cursor-pointer person-image" data-id="${person.id}">
+                                <img src="${person.localImageUrl}" alt="${person.name}" class="w-full h-64 object-cover cursor-pointer person-image" data-id="${person.id}" onerror="this.onerror=null;this.src='${person.fallbackImageUrl}';">
                                 <div class="p-6">
                                     <h3 class="text-xl font-bold text-slate-800">${person.name}</h3>
                                     <p class="text-slate-500 mt-1">${person.connection}</p>
@@ -332,7 +332,7 @@
                 if (!person) return '';
                 return `
                     <div class="node person-image" data-id="${person.id}">
-                        <img src="${person.imageUrl}" alt="${person.name}">
+                        <img src="${person.localImageUrl}" alt="${person.name}" onerror="this.onerror=null;this.src='${person.fallbackImageUrl}';">
                         <div class="node-name">${person.name}</div>
                         <div class="node-connection">${person.connection}</div>
                     </div>
@@ -503,8 +503,13 @@
                 const person = peopleData.find(p => p.id === personId);
                 if (!person) return;
 
-                modalImage.src = person.imageUrl;
+                modalImage.src = person.localImageUrl;
                 modalImage.alt = `Enlarged view of ${person.name}`;
+                
+                modalImage.onerror = () => {
+                    modalImage.src = person.fallbackImageUrl;
+                    modalImage.onerror = null; 
+                };
                 
                 // Populate person info
                 personInfoContainer.innerHTML = `
@@ -521,7 +526,7 @@
                     related.forEach(relatedPerson => {
                         relatedHtml += `
                             <button class="related-person-btn flex items-center gap-2 bg-slate-100 hover:bg-slate-200 transition px-3 py-1 rounded-full text-sm" data-id="${relatedPerson.id}">
-                                <img src="${relatedPerson.imageUrl}" class="w-6 h-6 rounded-full object-cover">
+                                <img src="${relatedPerson.fallbackImageUrl}" class="w-6 h-6 rounded-full object-cover">
                                 <span>${relatedPerson.name}</span>
                             </button>
                         `;
@@ -574,7 +579,5 @@
     </script>
 </body>
 </html>
-
-
 
 
