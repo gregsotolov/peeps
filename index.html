@@ -136,12 +136,12 @@
                     <div id="sort-controls" class="flex-shrink-0">
                         <select id="sort-dropdown" class="w-full sm:w-auto px-4 py-2 text-sm font-semibold rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                             <option value="everyone">Filter & Sort</option>
-                            <option value="family">Family Only</option>
-                            <option value="friends">Friends Only</option>
-                            <option value="coworkers">Coworkers Only</option>
-                            <option value="aunts-uncles">Aunts & Uncles Only</option>
                             <option value="az">Sort Alphabetical (A-Z)</option>
                             <option value="za">Sort Alphabetical (Z-A)</option>
+                            <option value="coworkers">Coworkers Only</option>
+                            <option value="extended-family">Extended Family Only</option>
+                            <option value="family">Family Only</option>
+                            <option value="friends">Friends Only</option>
                         </select>
                     </div>
                 </div>
@@ -227,6 +227,16 @@
                 { id: 24, name: 'Fran Meyers', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Fran', description: 'The best aunt for advice and support.' },
                 { id: 25, name: 'Tracy Henderson', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Tracy', description: 'Her generosity and kindness are inspiring.' },
                 { id: 26, name: 'Beverly Sotolov', connection: 'Aunt', imageUrl: 'https://placehold.co/400x400/e9c46a/2a9d8f?text=Beverly', description: 'Always makes every family gathering special.' },
+                // Cousins
+                { id: 27, name: 'Rachel Kappen', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Rachel', description: 'A cousin who feels more like a sister.' },
+                { id: 28, name: 'Kevin Kappen', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kevin', description: 'Always knows how to make everyone laugh.' },
+                { id: 29, name: 'Jaime Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jaime', description: 'Incredibly smart and driven.' },
+                { id: 30, name: 'Kadi Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Kadi', description: 'The most adventurous person in the family.' },
+                { id: 31, name: 'Nick Henderson', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Nick', description: 'A talented musician and a great person to talk to.' },
+                { id: 32, name: 'Joey Meyers', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Joey', description: 'Shares my love for movies and games.' },
+                { id: 33, name: 'Jessica Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Jessica', description: 'Wise beyond her years.' },
+                { id: 34, name: 'Robin Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=Robin', description: 'Has a passion for art and creativity.' },
+                { id: 35, name: 'David Sotolov', connection: 'Cousin', imageUrl: 'https://placehold.co/400x400/f4a261/264653?text=David', description: 'The family comedian.' },
             ];
 
             // --- PASSWORD PROTECTION ---
@@ -282,21 +292,22 @@
 
                 // 2. Apply category filter if selected
                 if (currentSort === 'family') {
-                    dataToRender = dataToRender.filter(person => person.connection !== 'Friend' && person.connection !== 'Coworker');
+                    dataToRender = dataToRender.filter(person => ['Father', 'Mother', 'Brother', 'Me!', 'Paternal Grandfather', 'Paternal Grandmother', 'Maternal Grandfather', 'Maternal Grandmother'].includes(person.connection));
                 } else if (currentSort === 'friends') {
                     dataToRender = dataToRender.filter(person => person.connection === 'Friend');
                 } else if (currentSort === 'coworkers') {
                     dataToRender = dataToRender.filter(person => person.connection === 'Coworker');
-                } else if (currentSort === 'aunts-uncles') {
-                    dataToRender = dataToRender.filter(person => person.connection === 'Aunt' || person.connection === 'Uncle');
+                } else if (currentSort === 'extended-family') {
+                    dataToRender = dataToRender.filter(person => ['Uncle', 'Aunt', 'Cousin'].includes(person.connection));
                 }
 
-
-                // 3. Apply alphabetical sort if selected
-                if (currentSort === 'az') {
-                    dataToRender.sort((a, b) => a.name.localeCompare(b.name));
-                } else if (currentSort === 'za') {
+                // 3. Apply alphabetical sort
+                if (currentSort === 'za') {
+                    // Sort Z-A if explicitly chosen
                     dataToRender.sort((a, b) => b.name.localeCompare(a.name));
+                } else {
+                    // Default to A-Z for all other cases (filters, 'az', 'everyone')
+                    dataToRender.sort((a, b) => a.name.localeCompare(b.name));
                 }
 
                 // 4. Render the results
@@ -447,15 +458,25 @@
                     4: { spouse: 3, children: [6, 21, 22, 24, 25] }, // Barbara
                     5: { spouse: 6, parents: [1, 2], children: [7, 8], siblings: [23, 26] }, // Gerald
                     6: { spouse: 5, parents: [3, 4], children: [7, 8], siblings: [21, 22, 24, 25] }, // Corinne
-                    7: { parents: [5, 6], sibling: 8, auntsUncles: [21, 22, 23, 24, 25, 26] }, // Greg
-                    8: { parents: [5, 6], sibling: 7, auntsUncles: [21, 22, 23, 24, 25, 26] }, // Robert
+                    7: { parents: [5, 6], sibling: 8, auntsUncles: [21, 22, 23, 24, 25, 26], cousins: [27, 28, 29, 30, 31, 32, 33, 34, 35] }, // Greg
+                    8: { parents: [5, 6], sibling: 7, auntsUncles: [21, 22, 23, 24, 25, 26], cousins: [27, 28, 29, 30, 31, 32, 33, 34, 35] }, // Robert
                     // Aunts & Uncles
-                    21: { parents: [3, 4], siblings: [6, 22, 24, 25], niblings: [7, 8] }, // Scott
+                    21: { parents: [3, 4], siblings: [6, 22, 24, 25], children: [32], niblings: [7, 8] }, // Scott
                     22: { parents: [3, 4], siblings: [6, 21, 24, 25], niblings: [7, 8] }, // George
-                    23: { parents: [1, 2], siblings: [5, 26], niblings: [7, 8] }, // Harvey
+                    23: { parents: [1, 2], siblings: [5, 26], children: [33, 34, 35], niblings: [7, 8] }, // Harvey
                     24: { parents: [3, 4], siblings: [6, 21, 22, 25], niblings: [7, 8] }, // Fran
-                    25: { parents: [3, 4], siblings: [6, 21, 22, 24], niblings: [7, 8] }, // Tracy
-                    26: { parents: [1, 2], siblings: [5, 23], niblings: [7, 8] }  // Beverly
+                    25: { parents: [3, 4], siblings: [6, 21, 22, 24], children: [27, 28, 29, 30, 31], niblings: [7, 8] }, // Tracy
+                    26: { parents: [1, 2], siblings: [5, 23], niblings: [7, 8] },  // Beverly
+                    // Cousins
+                    27: { parents: [25], siblings: [28, 29, 30, 31] }, // Rachel
+                    28: { parents: [25], siblings: [27, 29, 30, 31] }, // Kevin
+                    29: { parents: [25], siblings: [27, 28, 30, 31] }, // Jaime
+                    30: { parents: [25], siblings: [27, 28, 29, 31] }, // Kadi
+                    31: { parents: [25], siblings: [27, 28, 29, 30] }, // Nick
+                    32: { parents: [21], siblings: [] }, // Joey
+                    33: { parents: [23], siblings: [34, 35] }, // Jessica
+                    34: { parents: [23], siblings: [33, 35] }, // Robin
+                    35: { parents: [23], siblings: [33, 34] }  // David
                 };
 
                 const relatedIds = [];
@@ -468,10 +489,11 @@
                     if (personRelations.parents) relatedIds.push(...personRelations.parents);
                     if (personRelations.children) relatedIds.push(...personRelations.children);
                     if (personRelations.auntsUncles) relatedIds.push(...personRelations.auntsUncles);
+                    if (personRelations.cousins) relatedIds.push(...personRelations.cousins);
                     if (personRelations.niblings) relatedIds.push(...personRelations.niblings);
                 }
                 
-                return relatedIds
+                return [...new Set(relatedIds)] // Remove duplicates
                     .map(id => peopleData.find(p => p.id === id))
                     .filter(Boolean);
             }
@@ -551,4 +573,5 @@
     </script>
 </body>
 </html>
+
 
